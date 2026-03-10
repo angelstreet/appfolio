@@ -4,6 +4,23 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { creator, projects, featuredStars } from '../data/projects'
 import heroImage from '../assets/hero.png'
 
+// Tech color mapping
+const techColors: Record<string, string> = {
+  'Python': 'border-yellow-500/40 text-yellow-300',
+  'React': 'border-cyan-500/40 text-cyan-300',
+  'TypeScript': 'border-blue-500/40 text-blue-300',
+  'Node.js': 'border-green-500/40 text-green-300',
+  'PostgreSQL': 'border-blue-400/40 text-blue-200',
+  'Docker': 'border-sky-500/40 text-sky-300',
+  'AI': 'border-purple-500/40 text-purple-300',
+  'Tailwind': 'border-teal-500/40 text-teal-300',
+  'Turso': 'border-emerald-500/40 text-emerald-300',
+  'Clerk': 'border-violet-500/40 text-violet-300',
+  'WebSocket': 'border-orange-500/40 text-orange-300',
+  'Canvas API': 'border-pink-500/40 text-pink-300',
+  'Vite': 'border-amber-500/40 text-amber-300',
+}
+
 // Types
 type Category = 'All' | 'SaaS' | 'Finance' | 'Gaming' | 'Productivity' | 'Creative' | 'Social'
 
@@ -136,48 +153,77 @@ function StarHotspot({ x, y, project, isPrimary, mouseOffset }: StarHotspotProps
         </motion.div>
       </Link>
 
+      {/* Desktop hover card */}
       <AnimatePresence>
         {isHovered && !isMobile && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="absolute left-1/2 -translate-x-1/2 top-full mt-4 w-48 md:w-56 bg-cosmic-800/90 backdrop-blur-md border border-cosmic-500/30 rounded-xl p-4 shadow-2xl z-50 pointer-events-none"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="absolute left-1/2 -translate-x-1/2 top-full mt-2 flex flex-col items-center z-50 pointer-events-none"
           >
-            <div className="text-2xl mb-2">{project.logo}</div>
-            <h3 className="text-star-gold font-semibold text-sm md:text-base">{project.title}</h3>
-            <p className="text-cosmic-200 text-xs md:text-sm mt-1 leading-relaxed">{project.shortDescription}</p>
+            {/* Logo with glow */}
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
+            >
+              <div className="absolute inset-0 rounded-2xl blur-xl" style={{
+                background: isPrimary ? 'rgba(255,215,0,0.25)' : 'rgba(140,170,255,0.2)',
+              }} />
+              <img
+                src={project.logoImage}
+                alt={project.title}
+                className="relative w-14 h-14 md:w-16 md:h-16 object-contain rounded-xl bg-white/90 p-1.5"
+              />
+            </motion.div>
+            {/* Title + description */}
+            <motion.div
+              className="mt-2 text-center max-w-[200px]"
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.12 }}
+            >
+              <h3 className="text-white font-semibold text-sm drop-shadow-lg">{project.title}</h3>
+              <p className="text-cosmic-200 text-xs mt-0.5 leading-relaxed drop-shadow-md">{project.shortDescription}</p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Mobile tap card */}
       <AnimatePresence>
         {isTapped && isMobile && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-cosmic-800/95 backdrop-blur-md border-t border-cosmic-500/30 rounded-t-2xl p-4 mx-2 mb-2 shadow-xl"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-cosmic-800/95 backdrop-blur-md border-t border-cosmic-500/30 rounded-t-2xl p-5 mx-2 mb-2 shadow-xl"
           >
             <button
               onClick={(e) => { e.preventDefault(); setIsTapped(false); }}
-              className="absolute top-2 right-2 text-cosmic-300 hover:text-white"
+              className="absolute top-3 right-3 text-cosmic-300 hover:text-white"
               aria-label="Close"
             >
               ✕
             </button>
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">{project.logo}</div>
+            <div className="flex items-center gap-4">
+              <img
+                src={project.logoImage}
+                alt={project.title}
+                className="w-14 h-14 object-contain rounded-xl bg-white/90 p-1.5"
+              />
               <div className="flex-1">
-                <h3 className="text-star-gold font-semibold">{project.title}</h3>
+                <h3 className="text-white font-semibold">{project.title}</h3>
                 <p className="text-cosmic-200 text-sm">{project.shortDescription}</p>
               </div>
             </div>
             <Link
               to={`/projects/${project.slug}`}
               onClick={() => setIsTapped(false)}
-              className="mt-3 block w-full text-center py-2 bg-star-gold text-cosmic-900 font-semibold rounded-lg"
+              className="mt-4 block w-full text-center py-2.5 bg-star-gold text-cosmic-900 font-semibold rounded-lg"
             >
               View Project
             </Link>
@@ -376,13 +422,20 @@ export default function Home() {
           backgroundSize: 'contain',
           backgroundPosition: 'bottom center',
           backgroundRepeat: 'no-repeat',
-          maskImage: 'radial-gradient(ellipse 70% 85% at 50% 75%, black 30%, transparent 75%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 70% 85% at 50% 75%, black 30%, transparent 75%)',
-          filter: 'brightness(0.9) contrast(1.05)',
+          maskImage: 'radial-gradient(ellipse 55% 70% at 50% 70%, black 15%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.2) 60%, transparent 72%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 55% 70% at 50% 70%, black 15%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.2) 60%, transparent 72%)',
         }} />
-        {/* Soft gradient overlay for blending */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-cosmic-900/80" />
-        <div className="absolute inset-0 bg-gradient-to-t from-cosmic-900 via-transparent to-transparent" style={{ height: '30%', bottom: 0, top: 'auto' }} />
+        {/* Edge gradient overlays for extra blending */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'linear-gradient(to right, rgba(5,5,16,0.8) 0%, transparent 15%, transparent 85%, rgba(5,5,16,0.8) 100%)',
+        }} />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'linear-gradient(to bottom, rgba(5,5,16,0.6) 0%, transparent 20%, transparent 75%, rgba(5,5,16,0.9) 100%)',
+        }} />
+        {/* Cinematic vignette */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse at center, transparent 35%, rgba(5,5,16,0.5) 70%, rgba(5,5,16,0.85) 100%)',
+        }} />
 
         {/* Supporting Stars */}
         <div className="absolute inset-0 pointer-events-none">
@@ -414,13 +467,26 @@ export default function Home() {
         </div>
 
         {/* Creator Info & CTAs */}
-        <div className="absolute bottom-4 md:bottom-8 left-0 right-0 z-20 px-4">
+        <div className="absolute bottom-6 md:bottom-10 left-0 right-0 z-20 px-4">
           <motion.div
             className="max-w-4xl mx-auto text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
+            {/* Scroll CTA */}
+            <motion.div
+              className="flex flex-col items-center gap-0.5 cursor-pointer mb-4"
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <span className="text-cosmic-300 text-[10px] md:text-xs tracking-widest uppercase">Explore</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cosmic-300">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+              </svg>
+            </motion.div>
+
             <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 drop-shadow-lg">{creator.name}</h1>
             <div className="flex flex-wrap items-center justify-center gap-1 md:gap-2 mb-2">
               <p className="text-cosmic-100 text-sm md:text-base drop-shadow-md">{creator.role}</p>
@@ -448,37 +514,78 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gradient bridge — hero to about */}
+      <div className="relative h-32 -mt-32 z-10 pointer-events-none" style={{
+        background: 'linear-gradient(to bottom, transparent, #0a0a1a 40%, #12122a)',
+      }} />
+
       {/* About Strip */}
-      <section className="py-12 px-4 bg-cosmic-800">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-cosmic-100 text-lg md:text-xl">{creator.shortBio}</p>
-        </div>
+      <section id="about" className="relative py-16 px-4 bg-cosmic-800 overflow-hidden">
+        {/* Subtle starfield bg */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4) 0%, transparent 100%), radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3) 0%, transparent 100%), radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.3) 0%, transparent 100%), radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.2) 0%, transparent 100%)',
+        }} />
+        <motion.div
+          className="max-w-4xl mx-auto text-center relative"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="text-cosmic-100 text-lg md:text-xl leading-relaxed">{creator.shortBio}</p>
+        </motion.div>
       </section>
 
       {/* Projects Grid */}
-      <section className="py-16 px-4 bg-cosmic-900">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-12">Projects</h2>
-          
+      <section className="relative py-20 px-4 bg-cosmic-900 overflow-hidden">
+        {/* Background accent */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full pointer-events-none" style={{
+          background: 'radial-gradient(circle, rgba(53,53,112,0.15) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+        }} />
+        <div className="max-w-6xl mx-auto relative">
+          <motion.h2
+            className="text-2xl md:text-3xl font-bold text-center text-white mb-14"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.5 }}
+          >
+            Projects
+          </motion.h2>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
-              <Link
+            {filteredProjects.map((project, i) => (
+              <motion.div
                 key={project.slug}
-                to={`/projects/${project.slug}`}
-                className="block bg-cosmic-800 hover:bg-cosmic-700 rounded-xl p-6 transition-all hover:scale-[1.02] border border-cosmic-600/50"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
               >
-                <div className="text-4xl mb-4">{project.logo}</div>
-                <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
-                <p className="text-cosmic-200 text-sm mb-4">{project.shortDescription}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tech.slice(0, 3).map((t) => (
-                    <span key={t} className="px-2 py-1 bg-cosmic-600 text-cosmic-100 text-xs rounded">{t}</span>
-                  ))}
-                </div>
-              </Link>
+                <Link
+                  to={`/projects/${project.slug}`}
+                  className="group block relative bg-cosmic-800/80 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 border border-cosmic-600/30 hover:border-star-gold/30 hover:shadow-[0_0_30px_-5px_rgba(255,215,0,0.15)] hover:-translate-y-1"
+                >
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{
+                    background: 'radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.06) 0%, transparent 70%)',
+                  }} />
+                  <div className="relative flex flex-col items-center text-center">
+                    <img src={project.logoImage} alt={project.title} className="w-12 h-12 object-contain rounded-lg mb-4 bg-white/90 p-1" />
+                    <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-star-gold transition-colors duration-300">{project.title}</h3>
+                    <p className="text-cosmic-200 text-sm mb-4 leading-relaxed">{project.shortDescription}</p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {project.tech.slice(0, 3).map((t) => (
+                        <span key={t} className={`px-2 py-1 bg-cosmic-800/60 text-xs rounded-md border ${techColors[t] || 'border-cosmic-500/40 text-cosmic-100'}`}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
-          
+
           {filteredProjects.length === 0 && (
             <p className="text-center text-cosmic-300">No projects in this category yet.</p>
           )}
@@ -486,19 +593,37 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section className="py-16 px-4 bg-cosmic-800">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">Tech Stack</h2>
+      <section className="relative py-20 px-4 bg-cosmic-800 overflow-hidden">
+        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 100%), radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.2) 0%, transparent 100%), radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.3) 0%, transparent 100%)',
+        }} />
+        <motion.div
+          className="max-w-4xl mx-auto text-center relative"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-10">Tech Stack</h2>
           <div className="flex flex-wrap justify-center gap-3">
-            {['Python', 'React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'AI/ML', 'Tailwind', 'Vite'].map((skill) => (
-              <span key={skill} className="px-4 py-2 bg-cosmic-700 text-cosmic-100 rounded-full text-sm">{skill}</span>
+            {['Python', 'React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'AI/ML', 'Tailwind', 'Vite'].map((skill, i) => (
+              <motion.span
+                key={skill}
+                className={`px-5 py-2.5 bg-cosmic-800/60 rounded-full text-sm border ${techColors[skill] || techColors[skill.replace('/ML', '')] || 'border-cosmic-500/40 text-cosmic-100'} hover:scale-105 transition-all duration-300`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+              >
+                {skill}
+              </motion.span>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 bg-cosmic-900 border-t border-cosmic-700">
+      <footer className="py-10 px-4 bg-cosmic-900 border-t border-cosmic-700/50">
         <div className="max-w-4xl mx-auto text-center text-cosmic-300 text-sm">
           <p>© {new Date().getFullYear()} {creator.name}. Built with passion.</p>
         </div>
