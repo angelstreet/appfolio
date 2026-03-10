@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { creator, projects, featuredStars } from '../data/projects'
 import heroImage from '../assets/hero.png'
 
@@ -12,26 +12,56 @@ interface StarHotspotProps {
 
 function StarHotspot({ x, y, project }: StarHotspotProps) {
   const [isHovered, setIsHovered] = useState(false)
+  const [isTapped, setIsTapped] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
+
+  // Close tap card on outside click or resize
+  useEffect(() => {
+    const handleResize = () => setIsTapped(false)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+  const handleClick = () => {
+    if (isMobile) {
+      setIsTapped(!isTapped)
+    }
+  }
+
+  const animationProps = shouldReduceMotion 
+    ? {} 
+    : {
+        animate: {
+          boxShadow: [
+            '0 0 20px 5px rgba(255, 215, 0, 0.5)',
+            '0 0 40px 10px rgba(255, 215, 0, 0.7)',
+            '0 0 20px 5px rgba(255, 215, 0, 0.5)',
+          ],
+        },
+        transition: { duration: 2, repeat: Infinity }
+      }
 
   return (
     <div
-      className="absolute"
+      className="absolute z-10"
       style={{ left: `${x}%`, top: `${y}%`, transform: 'translate(-50%, -50%)' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link to={`/projects/${project.slug}`}>
+      <Link 
+        to={`/projects/${project.slug}`}
+        onClick={handleClick}
+        className="block focus:outline-none focus:ring-2 focus:ring-star-gold rounded-full"
+        aria-label={`View ${project.title} project`}
+        tabIndex={0}
+      >
         <motion.div
           className="cursor-pointer relative"
-          whileHover={{ scale: 1.1 }}
-          animate={{
-            boxShadow: [
-              '0 0 20px 5px rgba(255, 215, 0, 0.5)',
-              '0 0 40px 10px rgba(255, 215, 0, 0.7)',
-              '0 0 20px 5px rgba(255, 215, 0, 0.5)',
-            ],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
+          whileHover={shouldReduceMotion ? {} : { scale: 1.1 }}
+          whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+          {...animationProps}
         >
           {/* Star glow */}
           <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-star-gold blur-md" />
@@ -42,27 +72,29 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
           </div>
           
           {/* Sparkle effect */}
-          <motion.div
-            className="absolute inset-0"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-          >
-            <div className="absolute top-0 left-1/2 w-1 h-1 bg-white rounded-full -translate-x-1/2" />
-            <div className="absolute bottom-0 left-1/2 w-1 h-1 bg-white rounded-full -translate-x-1/2" />
-            <div className="absolute left-0 top-1/2 w-1 h-1 bg-white rounded-full -translate-y-1/2" />
-            <div className="absolute right-0 top-1/2 w-1 h-1 bg-white rounded-full -translate-y-1/2" />
-          </motion.div>
+          {!shouldReduceMotion && (
+            <motion.div
+              className="absolute inset-0"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+            >
+              <div className="absolute top-0 left-1/2 w-1 h-1 bg-white rounded-full -translate-x-1/2" />
+              <div className="absolute bottom-0 left-1/2 w-1 h-1 bg-white rounded-full -translate-x-1/2" />
+              <div className="absolute left-0 top-1/2 w-1 h-1 bg-white rounded-full -translate-y-1/2" />
+              <div className="absolute right-0 top-1/2 w-1 h-1 bg-white rounded-full -translate-y-1/2" />
+            </motion.div>
+          )}
         </motion.div>
       </Link>
 
-      {/* Tooltip */}
+      {/* Desktop Tooltip */}
       <AnimatePresence>
-        {isHovered && (
+        {isHovered && !isMobile && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute left-1/2 -translate-x-1/2 top-full mt-4 w-48 md:w-56 bg-cosmic-800/95 backdrop-blur-sm border border-cosmic-600 rounded-lg p-4 shadow-xl z-50"
+            className="absolute left-1/2 -translate-x-1/2 top-full mt-4 w-48 md:w-56 bg-cosmic-800/95 backdrop-blur-sm border border-cosmic-600 rounded-lg p-4 shadow-xl z-50 pointer-events-none"
           >
             <div className="text-2xl mb-2">{project.logo}</div>
             <h3 className="text-star-gold font-semibold text-sm md:text-base">{project.title}</h3>
@@ -70,11 +102,69 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Mobile Tap Card - Bottom Sheet Style */}
+      <AnimatePresence>
+        {isTapped && isMobile && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-cosmic-800 border-t border-cosmic-600 rounded-t-2xl p-4 mx-2 mb-2 shadow-xl"
+          >
+            <button 
+              onClick={(e) => { e.preventDefault(); setIsTapped(false); }}
+              className="absolute top-2 right-2 text-cosmic-300 hover:text-white"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="text-3xl">{project.logo}</div>
+              <div className="flex-1">
+                <h3 className="text-star-gold font-semibold">{project.title}</h3>
+                <p className="text-cosmic-200 text-sm">{project.shortDescription}</p>
+              </div>
+            </div>
+            <Link
+              to={`/projects/${project.slug}`}
+              onClick={() => setIsTapped(false)}
+              className="mt-3 block w-full text-center py-2 bg-star-gold text-cosmic-900 font-semibold rounded-lg"
+            >
+              View Project
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile overlay */}
+      <AnimatePresence>
+        {isTapped && isMobile && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsTapped(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
 
 function SupportingStar({ x, y }: { x: number; y: number }) {
+  const shouldReduceMotion = useReducedMotion()
+  
+  if (shouldReduceMotion) {
+    return (
+      <div
+        className="absolute w-1 h-1 bg-white/50 rounded-full"
+        style={{ left: `${x}%`, top: `${y}%` }}
+      />
+    )
+  }
+
   return (
     <motion.div
       className="absolute w-1 h-1 bg-white rounded-full"
@@ -123,7 +213,7 @@ export default function Home() {
         </div>
 
         {/* Featured Star Hotspots */}
-        <div className="absolute inset-0 z-10">
+        <div className="absolute inset-0">
           {featuredStars.map((star) => {
             const project = projects.find(p => p.slug === star.projectSlug)
             if (!project) return null

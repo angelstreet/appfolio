@@ -10,11 +10,11 @@
 ## Tasks
 
 ### Phase 1: Setup & Infrastructure
-- [ ] 1.1 Create Vite + React + TS project in `~/shared/projects/appfolio/`
-- [ ] 1.2 Configure Tailwind CSS
-- [ ] 1.3 Set up project structure (components, pages, data, assets)
-- [ ] 1.4 Initialize Git repo and connect to GitHub (angelstreet/appfolio)
-- [ ] 1.5 Add to Vercel (static deploy)
+- [x] 1.1 Create Vite + React + TS project in `~/shared/projects/appfolio/`
+- [x] 1.2 Configure Tailwind CSS
+- [x] 1.3 Set up project structure (components, pages, data, assets)
+- [x] 1.4 Initialize Git repo and connect to GitHub (angelstreet/appfolio)
+- [x] 1.5 Add to Vercel (static deploy) → https://appfolio-omega.vercel.app
 
 ### Phase 2: Hero Section
 - [ ] 2.1 Generate/create hero foundation artwork (seated figure + night sky)
