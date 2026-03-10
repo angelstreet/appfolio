@@ -17,14 +17,14 @@
 - [x] 1.5 Add to Vercel (static deploy) → https://appfolio-omega.vercel.app
 
 ### Phase 2: Hero Section
-- [ ] 2.1 Generate/create hero foundation artwork (seated figure + night sky)
-- [ ] 2.2 Build hero layout with layered composition
-- [ ] 2.3 Position featured star hotspots (3 stars - primary, secondary left, secondary right)
-- [ ] 2.4 Add supporting stars layer
-- [ ] 2.5 Implement hover tooltips for featured stars (desktop)
-- [ ] 2.6 Implement tap cards for featured stars (mobile)
-- [ ] 2.7 Add CSS animations (pulse, glow, twinkle)
-- [ ] 2.8 Add CTA buttons (Explore, GitHub, LinkedIn, Resume)
+- [x] 2.1 Generate/create hero foundation artwork (seated figure + night sky)
+- [x] 2.2 Build hero layout with layered composition
+- [x] 2.3 Position featured star hotspots (3 stars - primary secondary right)
+-, secondary left, [x] 2.4 Add supporting stars layer
+- [x] 2.5 Implement hover tooltips for featured stars (desktop)
+- [x] 2.6 Implement tap cards for featured stars (mobile)
+- [x] 2.7 Add CSS animations (pulse, glow, twinkle)
+- [x] 2.8 Add CTA buttons (Explore, GitHub, LinkedIn, Resume)
 
 ### Phase 3: Content & Data
 - [ ] 3.1 Define project data model (from PRD)

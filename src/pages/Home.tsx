@@ -4,18 +4,21 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { creator, projects, featuredStars } from '../data/projects'
 import heroImage from '../assets/hero.png'
 
+// Types
+type Category = 'All' | 'SaaS' | 'Finance' | 'Gaming' | 'Productivity' | 'Creative' | 'Social'
+
 interface StarHotspotProps {
   x: number
   y: number
   project: typeof projects[0]
+  showConstellation: boolean
 }
 
-function StarHotspot({ x, y, project }: StarHotspotProps) {
+function StarHotspot({ x, y, project, showConstellation }: StarHotspotProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [isTapped, setIsTapped] = useState(false)
   const shouldReduceMotion = useReducedMotion()
 
-  // Close tap card on outside click or resize
   useEffect(() => {
     const handleResize = () => setIsTapped(false)
     window.addEventListener('resize', handleResize)
@@ -25,9 +28,7 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   const handleClick = () => {
-    if (isMobile) {
-      setIsTapped(!isTapped)
-    }
+    if (isMobile) setIsTapped(!isTapped)
   }
 
   const animationProps = shouldReduceMotion 
@@ -43,6 +44,33 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
         transition: { duration: 2, repeat: Infinity }
       }
 
+  // Constellation line to center star
+  const ConstellationLine = () => {
+    if (!showConstellation || shouldReduceMotion) return null
+    
+    // Calculate angle to center (50%, 20%)
+    const centerX = 50
+    const centerY = 20
+    const dx = centerX - x
+    const dy = centerY - y
+    const length = Math.sqrt(dx * dx + dy * dy)
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI)
+    
+    return (
+      <div
+        className="absolute h-px bg-gradient-to-r from-transparent via-star-gold/40 to-star-gold/60"
+        style={{
+          left: `${x}%`,
+          top: `${y}%`,
+          width: `${length}%`,
+          transform: `rotate(${angle}deg)`,
+          transformOrigin: 'left center',
+          pointerEvents: 'none',
+        }}
+      />
+    )
+  }
+
   return (
     <div
       className="absolute z-10"
@@ -50,6 +78,8 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      <ConstellationLine />
+      
       <Link 
         to={`/projects/${project.slug}`}
         onClick={handleClick}
@@ -63,15 +93,10 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
           whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
           {...animationProps}
         >
-          {/* Star glow */}
           <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-star-gold blur-md" />
-          
-          {/* Star core */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-4 h-4 md:w-6 md:h-6 bg-star-amber rounded-full" />
           </div>
-          
-          {/* Sparkle effect */}
           {!shouldReduceMotion && (
             <motion.div
               className="absolute inset-0"
@@ -87,7 +112,6 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
         </motion.div>
       </Link>
 
-      {/* Desktop Tooltip */}
       <AnimatePresence>
         {isHovered && !isMobile && (
           <motion.div
@@ -103,7 +127,6 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
         )}
       </AnimatePresence>
 
-      {/* Mobile Tap Card - Bottom Sheet Style */}
       <AnimatePresence>
         {isTapped && isMobile && (
           <motion.div
@@ -137,7 +160,6 @@ function StarHotspot({ x, y, project }: StarHotspotProps) {
         )}
       </AnimatePresence>
 
-      {/* Mobile overlay */}
       <AnimatePresence>
         {isTapped && isMobile && (
           <motion.div
@@ -157,12 +179,7 @@ function SupportingStar({ x, y }: { x: number; y: number }) {
   const shouldReduceMotion = useReducedMotion()
   
   if (shouldReduceMotion) {
-    return (
-      <div
-        className="absolute w-1 h-1 bg-white/50 rounded-full"
-        style={{ left: `${x}%`, top: `${y}%` }}
-      />
-    )
+    return <div className="absolute w-1 h-1 bg-white/50 rounded-full" style={{ left: `${x}%`, top: `${y}%` }} />
   }
 
   return (
@@ -182,19 +199,69 @@ function SupportingStar({ x, y }: { x: number; y: number }) {
   )
 }
 
+// Shooting star component
+function ShootingStar() {
+  const shouldReduceMotion = useReducedMotion()
+  const [position, setPosition] = useState({ x: Math.random() * 100, y: Math.random() * 40 })
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (shouldReduceMotion) return
+    
+    const interval = setInterval(() => {
+      setPosition({ x: Math.random() * 100, y: Math.random() * 40 })
+      setIsVisible(true)
+      setTimeout(() => setIsVisible(false), 1000)
+    }, 8000 + Math.random() * 4000)
+
+    return () => clearInterval(interval)
+  }, [shouldReduceMotion])
+
+  if (!isVisible || shouldReduceMotion) return null
+
+  return (
+    <motion.div
+      initial={{ x: '-10%', y: '0%', opacity: 1 }}
+      animate={{ x: '110%', y: '50%', opacity: 0 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+      className="absolute z-5 pointer-events-none"
+      style={{ left: `${position.x}%`, top: `${position.y}%` }}
+    >
+      <div className="w-16 h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-80" />
+      <div className="absolute top-0 left-0 w-4 h-px bg-white opacity-60 blur-sm" />
+    </motion.div>
+  )
+}
+
+// Category filter
+const categories: Category[] = ['All', 'SaaS', 'Finance', 'Gaming', 'Productivity', 'Creative', 'Social']
+
 export default function Home() {
+  const [activeCategory, setActiveCategory] = useState<Category>('All')
+  const [showConstellation, setShowConstellation] = useState(false)
+  const [shootingStarKey, _setShootingStarKey] = useState(0)
+
+  const filteredProjects = activeCategory === 'All' 
+    ? projects 
+    : projects.filter(p => p.category === activeCategory)
+
+  // Highlight stars for filtered category
+  const highlightedProjects = activeCategory === 'All' 
+    ? new Set(projects.map(p => p.slug))
+    : new Set(filteredProjects.map(p => p.slug))
+
+  const handleCategoryChange = (category: Category) => {
+    setActiveCategory(category)
+    // Trigger shooting star on filter change
+    0
+  }
+
   return (
     <div className="min-h-screen bg-cosmic-900">
       {/* Hero Section */}
       <section className="relative h-screen w-full overflow-hidden">
-        {/* Hero Background Image */}
         <div className="absolute inset-0">
-          <img
-            src={heroImage}
-            alt="Cosmic portfolio hero"
-            className="w-full h-full object-cover object-bottom"
-          />
-          {/* Gradient overlay for readability */}
+          <img src={heroImage} alt="Cosmic portfolio hero" className="w-full h-full object-cover object-bottom" />
           <div className="absolute inset-0 bg-gradient-to-b from-cosmic-900/30 via-cosmic-900/20 to-cosmic-900" />
         </div>
 
@@ -212,17 +279,25 @@ export default function Home() {
           <SupportingStar x={40} y={8} />
         </div>
 
+        {/* Shooting Stars */}
+        <ShootingStar key={shootingStarKey} />
+
         {/* Featured Star Hotspots */}
-        <div className="absolute inset-0">
+        <div 
+          className="absolute inset-0"
+          onMouseEnter={() => setShowConstellation(true)}
+          onMouseLeave={() => setShowConstellation(false)}
+        >
           {featuredStars.map((star) => {
             const project = projects.find(p => p.slug === star.projectSlug)
-            if (!project) return null
+            if (!project || !highlightedProjects.has(project.slug)) return null
             return (
               <StarHotspot
                 key={star.id}
                 x={star.x}
                 y={star.y}
                 project={project}
+                showConstellation={showConstellation}
               />
             )
           })}
@@ -231,38 +306,35 @@ export default function Home() {
         {/* Creator Info & CTAs */}
         <div className="absolute bottom-8 left-0 right-0 z-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">
-              {creator.name}
-            </h1>
-            <p className="text-cosmic-200 text-sm md:text-lg mb-4">
-              {creator.role}
-            </p>
+            <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">{creator.name}</h1>
+            <p className="text-cosmic-200 text-sm md:text-lg mb-4">{creator.role}</p>
             
-            {/* CTAs */}
+            {/* Category Filter */}
+            <div className="flex flex-wrap justify-center gap-2 mb-4">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => handleCategoryChange(cat)}
+                  className={`px-3 py-1 rounded-full text-xs md:text-sm transition-all ${
+                    activeCategory === cat 
+                      ? 'bg-star-gold text-cosmic-900 font-semibold' 
+                      : 'bg-cosmic-700/50 text-cosmic-200 hover:bg-cosmic-600'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            
             <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-              <a
-                href={creator.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 bg-cosmic-700 hover:bg-cosmic-600 text-white rounded-lg text-sm md:text-base transition-colors"
-              >
+              <a href={creator.githubUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-cosmic-700 hover:bg-cosmic-600 text-white rounded-lg text-sm md:text-base transition-colors">
                 GitHub
               </a>
-              <a
-                href={creator.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm md:text-base transition-colors"
-              >
+              <a href={creator.linkedinUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm md:text-base transition-colors">
                 LinkedIn
               </a>
               {creator.resumeUrl && (
-                <a
-                  href={creator.resumeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-star-gold/20 hover:bg-star-gold/30 text-star-gold border border-star-gold/50 rounded-lg text-sm md:text-base transition-colors"
-                >
+                <a href={creator.resumeUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-star-gold/20 hover:bg-star-gold/30 text-star-gold border border-star-gold/50 rounded-lg text-sm md:text-base transition-colors">
                   Resume
                 </a>
               )}
@@ -274,63 +346,47 @@ export default function Home() {
       {/* About Strip */}
       <section className="py-12 px-4 bg-cosmic-800">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="text-cosmic-100 text-lg md:text-xl">
-            {creator.shortBio}
-          </p>
+          <p className="text-cosmic-100 text-lg md:text-xl">{creator.shortBio}</p>
         </div>
       </section>
 
       {/* Projects Grid */}
       <section className="py-16 px-4 bg-cosmic-900">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-12">
-            Projects
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-12">Projects</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => (
+            {filteredProjects.map((project) => (
               <Link
                 key={project.slug}
                 to={`/projects/${project.slug}`}
                 className="block bg-cosmic-800 hover:bg-cosmic-700 rounded-xl p-6 transition-all hover:scale-[1.02] border border-cosmic-600/50"
               >
                 <div className="text-4xl mb-4">{project.logo}</div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-cosmic-200 text-sm mb-4">
-                  {project.shortDescription}
-                </p>
+                <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
+                <p className="text-cosmic-200 text-sm mb-4">{project.shortDescription}</p>
                 <div className="flex flex-wrap gap-2">
                   {project.tech.slice(0, 3).map((t) => (
-                    <span
-                      key={t}
-                      className="px-2 py-1 bg-cosmic-600 text-cosmic-100 text-xs rounded"
-                    >
-                      {t}
-                    </span>
+                    <span key={t} className="px-2 py-1 bg-cosmic-600 text-cosmic-100 text-xs rounded">{t}</span>
                   ))}
                 </div>
               </Link>
             ))}
           </div>
+          
+          {filteredProjects.length === 0 && (
+            <p className="text-center text-cosmic-300">No projects in this category yet.</p>
+          )}
         </div>
       </section>
 
       {/* Skills Section */}
       <section className="py-16 px-4 bg-cosmic-800">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
-            Tech Stack
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">Tech Stack</h2>
           <div className="flex flex-wrap justify-center gap-3">
             {['Python', 'React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'AI/ML', 'Tailwind', 'Vite'].map((skill) => (
-              <span
-                key={skill}
-                className="px-4 py-2 bg-cosmic-700 text-cosmic-100 rounded-full text-sm"
-              >
-                {skill}
-              </span>
+              <span key={skill} className="px-4 py-2 bg-cosmic-700 text-cosmic-100 rounded-full text-sm">{skill}</span>
             ))}
           </div>
         </div>
