@@ -532,7 +532,7 @@ export default function Home() {
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-cosmic-100 text-lg md:text-xl leading-relaxed">{creator.shortBio}</p>
+          {creator.shortBio && <p className="text-cosmic-100 text-lg md:text-xl leading-relaxed">{creator.shortBio}</p>}
         </motion.div>
       </section>
 

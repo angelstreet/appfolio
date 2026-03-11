@@ -41,7 +41,7 @@ export interface Project {
 export const creator: Creator = {
   name: "Joachim N'Doye",
   role: "IT Engineer",
-  shortBio: "🚀 Test & Automation Artist 🚀 ⋄ • Python • 🌐 Fullstack ⋄ ISTQB ⋄ ⋄ Opensource ⋄",
+  shortBio: "",
   linkedinUrl: "https://www.linkedin.com/in/joachim-n-doye-a6279225/",
   githubUrl: "https://github.com/angelstreet",
 }
