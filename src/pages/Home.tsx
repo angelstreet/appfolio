@@ -606,7 +606,7 @@ export default function Home() {
         >
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-10">Tech Stack</h2>
           <div className="flex flex-wrap justify-center gap-3">
-            {['Python', 'React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'AI/ML', 'Tailwind', 'Vite'].map((skill, i) => (
+            {['Python', 'React', 'TypeScript', 'Node.js', 'Docker', 'AI/ML'].map((skill, i) => (
               <motion.span
                 key={skill}
                 className={`px-5 py-2.5 bg-cosmic-800/60 rounded-full text-sm border ${techColors[skill] || techColors[skill.replace('/ML', '')] || 'border-cosmic-500/40 text-cosmic-100'} hover:scale-105 transition-all duration-300`}
