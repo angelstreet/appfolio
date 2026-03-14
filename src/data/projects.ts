@@ -37,6 +37,7 @@ export interface Project {
   tech: string[]
   screenshots?: string[]
   logoSize?: 'lg'
+  private?: boolean
 }
 
 export const creator: Creator = {
@@ -56,12 +57,13 @@ export const projects: Project[] = [
     logo: '🧪',
     logoImage: logoVirtualpytest,
     repoUrl: 'https://github.com/angelstreet/virtualpytest',
-    liveUrl: 'https://www.virtualpytest.com',
+    liveUrl: 'https://virtualpytest.angelstreet.io',
     featured: true,
     featuredOrder: 1,
     starType: 'primary',
     category: 'SaaS',
     tech: ['Python', 'React', 'PostgreSQL', 'Docker', 'AI'],
+    private: true,
   },
   {
     slug: 'konto',
@@ -70,7 +72,7 @@ export const projects: Project[] = [
     fullDescription: 'Konto is a comprehensive personal finance dashboard that tracks accounts, investments, loans, and provides detailed analytics. Features include bank synchronization, portfolio performance, and loan amortization tracking.',
     logo: '💰',
     logoImage: logoKonto,
-    repoUrl: 'https://github.com/angelstreet/kompta',
+    repoUrl: 'https://github.com/angelstreet/konto',
     liveUrl: 'https://konto.angelstreet.io',
     featured: true,
     featuredOrder: 2,
@@ -101,7 +103,7 @@ export const projects: Project[] = [
     logo: '🎮',
     logoImage: logoClawsgames,
     repoUrl: 'https://github.com/angelstreet/clawsgames',
-    liveUrl: 'https://ranking.angelstreet.io',
+    liveUrl: 'https://clawsgames.angelstreet.io/clawsgames/',
     featured: false,
     starType: 'support',
     category: 'Gaming',
@@ -116,7 +118,7 @@ export const projects: Project[] = [
     logo: '🏆',
     logoImage: logoRankingofclaws,
     repoUrl: 'https://github.com/angelstreet/rankingofclaws',
-    liveUrl: 'https://ranking.angelstreet.io',
+    liveUrl: 'https://rankingofclaws.angelstreet.io',
     featured: false,
     starType: 'support',
     category: 'Gaming',
@@ -144,6 +146,7 @@ export const projects: Project[] = [
     logo: '📦',
     logoImage: logoClawbox,
     repoUrl: 'https://github.com/angelstreet/clawbox',
+    liveUrl: 'https://claw-box.io',
     featured: false,
     starType: 'support',
     category: 'SaaS',
@@ -157,6 +160,7 @@ export const projects: Project[] = [
     logo: '🎙️',
     logoImage: logoVoicebox,
     repoUrl: 'https://github.com/angelstreet/voicebox',
+    liveUrl: 'https://voicebox.angelstreet.io',
     featured: false,
     starType: 'support',
     category: 'Creative',
@@ -170,6 +174,7 @@ export const projects: Project[] = [
     logo: '💜',
     logoImage: logoHeartclaws,
     repoUrl: 'https://github.com/angelstreet/heartclaws',
+    liveUrl: 'https://heartclaws.angelstreet.io',
     featured: false,
     starType: 'support',
     category: 'Social',
@@ -226,6 +231,7 @@ export const projects: Project[] = [
     logo: '💘',
     logoImage: logoAfromeet,
     repoUrl: 'https://github.com/angelstreet/afromeet',
+    liveUrl: 'https://afromeet.angelstreet.io/afromeet/',
     featured: false,
     starType: 'support',
     category: 'Social',
