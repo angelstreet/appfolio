@@ -126,13 +126,13 @@ function StarHotspot({ x, y, project, isPrimary, mouseOffset }: StarHotspotProps
             <motion.div
               className="absolute"
               style={{
-                width: size * 3,
+                width: size * 2,
                 height: 1,
                 background: isPrimary
-                  ? 'linear-gradient(90deg, transparent, rgba(255,215,0,0.4), rgba(255,255,255,0.8), rgba(255,215,0,0.4), transparent)'
-                  : 'linear-gradient(90deg, transparent, rgba(140,170,255,0.3), rgba(255,255,255,0.6), rgba(140,170,255,0.3), transparent)',
+                  ? 'linear-gradient(90deg, transparent, rgba(255,215,0,0.2), rgba(255,255,255,0.4), rgba(255,215,0,0.2), transparent)'
+                  : 'linear-gradient(90deg, transparent, rgba(140,170,255,0.15), rgba(255,255,255,0.3), rgba(140,170,255,0.15), transparent)',
               }}
-              animate={{ opacity: [0.4, 0.8, 0.4], scaleX: [0.8, 1.1, 0.8] }}
+              animate={{ opacity: [0.3, 0.6, 0.3], scaleX: [0.8, 1.1, 0.8] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             />
           )}
@@ -141,12 +141,12 @@ function StarHotspot({ x, y, project, isPrimary, mouseOffset }: StarHotspotProps
               className="absolute"
               style={{
                 width: 1,
-                height: size * 3,
+                height: size * 2,
                 background: isPrimary
-                  ? 'linear-gradient(180deg, transparent, rgba(255,215,0,0.4), rgba(255,255,255,0.8), rgba(255,215,0,0.4), transparent)'
-                  : 'linear-gradient(180deg, transparent, rgba(140,170,255,0.3), rgba(255,255,255,0.6), rgba(140,170,255,0.3), transparent)',
+                  ? 'linear-gradient(180deg, transparent, rgba(255,215,0,0.2), rgba(255,255,255,0.4), rgba(255,215,0,0.2), transparent)'
+                  : 'linear-gradient(180deg, transparent, rgba(140,170,255,0.15), rgba(255,255,255,0.3), rgba(140,170,255,0.15), transparent)',
               }}
-              animate={{ opacity: [0.3, 0.7, 0.3], scaleY: [0.8, 1.1, 0.8] }}
+              animate={{ opacity: [0.2, 0.5, 0.2], scaleY: [0.8, 1.1, 0.8] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
             />
           )}
@@ -161,7 +161,7 @@ function StarHotspot({ x, y, project, isPrimary, mouseOffset }: StarHotspotProps
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="absolute left-1/2 -translate-x-1/2 top-full mt-2 flex flex-col items-center z-50 pointer-events-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-50 pointer-events-none"
           >
             {/* Logo with glow */}
             <motion.div
@@ -176,7 +176,7 @@ function StarHotspot({ x, y, project, isPrimary, mouseOffset }: StarHotspotProps
               <img
                 src={project.logoImage}
                 alt={project.title}
-                className="relative w-14 h-14 md:w-16 md:h-16 object-contain rounded-xl bg-white/90 p-1.5"
+                className="relative w-14 h-14 md:w-16 md:h-16 object-contain rounded-xl p-1.5"
               />
             </motion.div>
             {/* Title + description */}
@@ -213,7 +213,7 @@ function StarHotspot({ x, y, project, isPrimary, mouseOffset }: StarHotspotProps
               <img
                 src={project.logoImage}
                 alt={project.title}
-                className="w-14 h-14 object-contain rounded-xl bg-white/90 p-1.5"
+                className="w-14 h-14 object-contain rounded-xl p-1.5"
               />
               <div className="flex-1">
                 <h3 className="text-white font-semibold">{project.title}</h3>
@@ -405,7 +405,7 @@ export default function Home() {
   }, [shouldReduceMotion])
 
   return (
-    <div className="min-h-screen bg-cosmic-900">
+    <div className="min-h-screen bg-cosmic-900" style={{ colorScheme: 'only light' }}>
       {/* Hero Section */}
       <section ref={heroRef} className="relative min-h-[100vh] w-full overflow-hidden">
         {/* Deep space background with nebula */}
@@ -572,7 +572,7 @@ export default function Home() {
                     background: 'radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.06) 0%, transparent 70%)',
                   }} />
                   <div className="relative flex flex-col items-center text-center">
-                    <img src={project.logoImage} alt={project.title} className="w-12 h-12 object-contain rounded-lg mb-4 bg-white/90 p-1" />
+                    <img src={project.logoImage} alt={project.title} className="w-12 h-12 object-contain rounded-lg mb-4 p-1" />
                     <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-star-gold transition-colors duration-300">{project.title}</h3>
                     <p className="text-cosmic-200 text-sm mb-4 leading-relaxed">{project.shortDescription}</p>
                     <div className="flex flex-wrap justify-center gap-2">
