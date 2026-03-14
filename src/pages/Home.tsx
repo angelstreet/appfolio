@@ -572,7 +572,7 @@ export default function Home() {
                     background: 'radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.06) 0%, transparent 70%)',
                   }} />
                   <div className="relative flex flex-col items-center text-center">
-                    <img src={project.logoImage} alt={project.title} className="h-16 max-w-[80%] object-contain mb-4" />
+                    <img src={project.logoImage} alt={project.title} className={`${project.logoSize === 'lg' ? 'h-24' : 'h-16'} max-w-[80%] object-contain mb-4`} />
                     <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-star-gold transition-colors duration-300">{project.title}</h3>
                     <p className="text-cosmic-200 text-sm mb-4 leading-relaxed">{project.shortDescription}</p>
                     <div className="flex flex-wrap justify-center gap-2">

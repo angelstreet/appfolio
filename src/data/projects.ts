@@ -36,6 +36,7 @@ export interface Project {
   category?: string
   tech: string[]
   screenshots?: string[]
+  logoSize?: 'lg'
 }
 
 export const creator: Creator = {
@@ -105,6 +106,7 @@ export const projects: Project[] = [
     starType: 'support',
     category: 'Gaming',
     tech: ['React', 'Node.js', 'PostgreSQL', 'WebSocket'],
+    logoSize: 'lg',
   },
   {
     slug: 'rankingofclaws',
@@ -214,6 +216,7 @@ export const projects: Project[] = [
     starType: 'support',
     category: 'Creative',
     tech: ['React', 'Canvas API', 'AI'],
+    logoSize: 'lg',
   },
   {
     slug: 'afromeet',
