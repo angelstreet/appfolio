@@ -176,7 +176,7 @@ function StarHotspot({ x, y, project, isPrimary, mouseOffset }: StarHotspotProps
               <img
                 src={project.logoImage}
                 alt={project.title}
-                className="relative w-20 h-20 md:w-24 md:h-24 object-contain rounded-xl"
+                className="relative h-16 md:h-20 max-w-[200px] object-contain rounded-xl"
               />
             </motion.div>
             {/* Title + description */}
@@ -572,7 +572,7 @@ export default function Home() {
                     background: 'radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.06) 0%, transparent 70%)',
                   }} />
                   <div className="relative flex flex-col items-center text-center">
-                    <img src={project.logoImage} alt={project.title} className="w-20 h-20 object-contain rounded-lg mb-4" />
+                    <img src={project.logoImage} alt={project.title} className="h-16 max-w-[80%] object-contain mb-4" />
                     <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-star-gold transition-colors duration-300">{project.title}</h3>
                     <p className="text-cosmic-200 text-sm mb-4 leading-relaxed">{project.shortDescription}</p>
                     <div className="flex flex-wrap justify-center gap-2">

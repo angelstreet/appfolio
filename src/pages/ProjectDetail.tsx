@@ -119,7 +119,7 @@ export default function ProjectDetail() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <img src={project.logoImage} alt={project.title} className="w-20 h-20 object-contain rounded-2xl mb-6 p-2" />
+            <img src={project.logoImage} alt={project.title} className="h-20 max-w-[250px] object-contain rounded-2xl mb-6" />
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
               {project.title}
             </h1>
@@ -231,7 +231,7 @@ export default function ProjectDetail() {
                     className="group block bg-cosmic-800/40 backdrop-blur-sm hover:bg-cosmic-700/50 rounded-xl p-5 transition-all duration-300 border border-cosmic-600/20 hover:border-star-gold/20 hover:shadow-[0_0_20px_-5px_rgba(255,215,0,0.1)]"
                   >
                     <div className="flex items-center gap-4">
-                      <img src={related.logoImage} alt={related.title} className="w-10 h-10 object-contain rounded-lg p-1" />
+                      <img src={related.logoImage} alt={related.title} className="h-10 max-w-[120px] object-contain rounded-lg" />
                       <div>
                         <h3 className="text-white font-medium group-hover:text-star-gold transition-colors duration-300">{related.title}</h3>
                         <p className="text-cosmic-300 text-sm leading-relaxed">{related.shortDescription}</p>
