@@ -11,6 +11,7 @@ import logoVoicebox from '../assets/logos/voicebox.png'
 import logoHeartclaws from '../assets/logos/heartclaws.png'
 import logoRankingofclaws from '../assets/logos/rankingofclaws.png'
 import logoEzplanner from '../assets/logos/ezplanner.png'
+import logoMylogo from '../assets/logos/mylogo.png'
 
 export interface Creator {
   name: string
@@ -236,6 +237,20 @@ export const projects: Project[] = [
     starType: 'support',
     category: 'Social',
     tech: ['React', 'Node.js', 'PostgreSQL', 'Clerk'],
+  },
+  {
+    slug: 'mylogo',
+    title: 'MyLogo',
+    shortDescription: 'AI logo generator',
+    fullDescription: 'MyLogo is an AI-powered logo generator that creates unique, professional logos in seconds. Design custom logos with intelligent style suggestions and easy customization.',
+    logo: '🎨',
+    logoImage: logoMylogo,
+    repoUrl: 'https://github.com/angelstreet/mylogo',
+    liveUrl: 'https://mylogo.angelstreet.io/mylogo/',
+    featured: false,
+    starType: 'support',
+    category: 'Creative',
+    tech: ['React', 'TypeScript', 'AI'],
   },
 ]
 
